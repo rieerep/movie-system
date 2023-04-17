@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace filmsystemet
 {
 	public class Program
@@ -31,7 +33,7 @@ namespace filmsystemet
 			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 		};
 
-			app.MapGet("/weatherforecast", (HttpContext httpContext) =>
+			app.MapGet("/weatherforecast1", (HttpContext httpContext) =>
 			{
 				var forecast = Enumerable.Range(1, 5).Select(index =>
 					new WeatherForecast
@@ -43,7 +45,9 @@ namespace filmsystemet
 					.ToArray();
 				return forecast;
 			})
-			.WithName("GetWeatherForecast");
+			.WithName("GetWeatherForecast1");
+
+
 
 			app.Run();
 		}

@@ -28,10 +28,15 @@ namespace filmsystemet
 
 			app.UseAuthorization();
 
+			app.MapGet("/person", () => "Welcome to the movie db!");
+
 			var summaries = new[]
 			{
 			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 		};
+
+
+
 
 			app.MapGet("/weatherforecast1", (HttpContext httpContext) =>
 			{

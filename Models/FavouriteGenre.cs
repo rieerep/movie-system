@@ -1,12 +1,17 @@
-﻿namespace filmsystemet.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace filmsystemet.Models
 {
-	public class FavouriteGenre
-	{
+    public partial class FavouriteGenre
+    {
         public int Id { get; set; }
         public string Movies { get; set; }
-        public double Rating { get; set; }
-        public string Link { get; set; }
-		public ICollection<Person> PersonId { get; set; }
-        public ICollection<Genre> GenreId { get; set; }
+        public decimal? Rating { get; set; }
+        public int PersonId { get; set; }
+        public int GenreId { get; set; }
+
+        public virtual Genre Genre { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

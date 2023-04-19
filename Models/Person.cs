@@ -1,20 +1,20 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace filmsystemet.Models
 {
-    public class Person
+    public partial class Person
     {
+        public Person()
+        {
+            FavouriteGenres = new HashSet<FavouriteGenre>();
+        }
+
         public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
 
-		[StringLength(15)]
-		[DisplayName("First Name")]
-		public string FirstName { get; set; }
-
-		[StringLength(20)]
-		[DisplayName("Last Name")]
-		public string LastName { get; set; } = null!;
-        
-
-	}
+        public virtual ICollection<FavouriteGenre> FavouriteGenres { get; set; }
+    }
 }

@@ -1,15 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace filmsystemet.Models
 {
-	public class Genre
-	{
-		public int Id { get; set; }
-		[StringLength(50)]
+    public partial class Genre
+    {
+        public Genre()
+        {
+            FavouriteGenres = new HashSet<FavouriteGenre>();
+        }
+
+        public int Id { get; set; }
         public string GenreName { get; set; }
+        public string Description { get; set; }
 
-		[StringLength(200)]
-		public string Description { get; set; }
-
-	}
+        public virtual ICollection<FavouriteGenre> FavouriteGenres { get; set; }
+    }
 }

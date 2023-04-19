@@ -30,16 +30,23 @@ namespace filmsystemet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Movies")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Rating")
+                        .HasColumnType("decimal(18,0)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("FavouriteGenres");
                 });
@@ -56,16 +63,10 @@ namespace filmsystemet.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("FavouriteGenreId")
-                        .HasColumnType("int");
-
                     b.Property<string>("GenreName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FavouriteGenreId");
 
                     b.ToTable("Genres");
                 });
@@ -78,10 +79,13 @@ namespace filmsystemet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("FavouriteGenreId")
-                        .HasColumnType("int");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
@@ -91,30 +95,36 @@ namespace filmsystemet.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FavouriteGenreId");
-
                     b.ToTable("Persons");
-                });
-
-            modelBuilder.Entity("filmsystemet.Models.Genre", b =>
-                {
-                    b.HasOne("filmsystemet.Models.FavouriteGenre", null)
-                        .WithMany("GenreId")
-                        .HasForeignKey("FavouriteGenreId");
-                });
-
-            modelBuilder.Entity("filmsystemet.Models.Person", b =>
-                {
-                    b.HasOne("filmsystemet.Models.FavouriteGenre", null)
-                        .WithMany("PersonId")
-                        .HasForeignKey("FavouriteGenreId");
                 });
 
             modelBuilder.Entity("filmsystemet.Models.FavouriteGenre", b =>
                 {
-                    b.Navigation("GenreId");
+                    b.HasOne("filmsystemet.Models.Genre", "Genre")
+                        .WithMany("FavouriteGenres")
+                        .HasForeignKey("GenreId")
+                        .IsRequired()
+                        .HasConstraintName("FK_FavouriteGenres_Genres");
 
-                    b.Navigation("PersonId");
+                    b.HasOne("filmsystemet.Models.Person", "Person")
+                        .WithMany("FavouriteGenres")
+                        .HasForeignKey("PersonId")
+                        .IsRequired()
+                        .HasConstraintName("FK_FavouriteGenres_Persons");
+
+                    b.Navigation("Genre");
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("filmsystemet.Models.Genre", b =>
+                {
+                    b.Navigation("FavouriteGenres");
+                });
+
+            modelBuilder.Entity("filmsystemet.Models.Person", b =>
+                {
+                    b.Navigation("FavouriteGenres");
                 });
 #pragma warning restore 612, 618
         }

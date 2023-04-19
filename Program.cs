@@ -1,3 +1,7 @@
+using filmsystemet.Data;
+using filmsystemet.Models;
+using filmsystemet.RepositoryPattern;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace filmsystemet
@@ -24,19 +28,60 @@ namespace filmsystemet
 				app.UseSwaggerUI();
 			}
 
-			app.UseHttpsRedirection();
+			// app.UseHttpsRedirection();
 
-			app.UseAuthorization();
+			// app.UseAuthorization();
 
-			app.MapGet("/person", () => "Welcome to the movie db!");
+			app.MapGet("/persons", (HttpContext httpContext) =>
+			{
+				PersonRepository personRepo = new PersonRepository(new MovieSystemDbContext());
+
+				return personRepo.GetAll();
+			}).WithName("GetPersons");
+
+			app.MapGet("/persongenres/{personId}", (int personId, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				PersonRepository personRepo = new PersonRepository (movieSystemDbContext);
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+				GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
+				var genres = favGenRepo.GetByCondition(fg => fg.PersonId == personId & fg.Movies == null).Join(genreRepo.GetAll(),
+					favGen => favGen.GenreId,
+					genre => genre.Id,
+					(favG, gen) => new { Genre = gen }).ToList();
+
+
+				//var studentToStandard = studentRep.GetAll().Join(standardRep.GetAll(),
+				//		student => student.StandardRefId,
+				//		standard => standard.StandardId,
+				//		(stud, stand) => new { Student = stud, Standard = stand }).ToList();
+
+				return genres;
+			}).WithName("GetPersonGenre");
+
+			app.MapGet("/personmovies/{personId}", (int personId, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				PersonRepository personRepo = new PersonRepository(movieSystemDbContext);
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+				GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
+				var movies = favGenRepo.GetByCondition(m => m.PersonId == personId & m.Movies != null).ToList();
+
+
+				//var studentToStandard = studentRep.GetAll().Join(standardRep.GetAll(),
+				//		student => student.StandardRefId,
+				//		standard => standard.StandardId,
+				//		(stud, stand) => new { Student = stud, Standard = stand }).ToList();
+
+				return movies;
+			}).WithName("GetPersonMovie");
+
+			app.MapPost("/")
 
 			var summaries = new[]
 			{
 			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 		};
-
-
-
 
 			app.MapGet("/weatherforecast1", (HttpContext httpContext) =>
 			{
@@ -51,8 +96,6 @@ namespace filmsystemet
 				return forecast;
 			})
 			.WithName("GetWeatherForecast1");
-
-
 
 			app.Run();
 		}

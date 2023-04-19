@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace filmsystemet.Models
 {
-    public partial class Person
+    public class Person
     {
         public Person()
         {

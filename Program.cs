@@ -32,6 +32,8 @@ namespace filmsystemet
 
 			// app.UseAuthorization();
 
+
+			 // GET Hämta alla personer i systemet
 			app.MapGet("/persons", (HttpContext httpContext) =>
 			{
 				PersonRepository personRepo = new PersonRepository(new MovieSystemDbContext());
@@ -39,6 +41,8 @@ namespace filmsystemet
 				return personRepo.GetAll();
 			}).WithName("GetPersons");
 
+
+			// GET Hämtar genrer kopplade till person i systemet
 			app.MapGet("/persongenres/{personId}", (int personId, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
@@ -59,6 +63,8 @@ namespace filmsystemet
 				return genres;
 			}).WithName("GetPersonGenre");
 
+
+			// GET Hämtar alla filmer kopplade till en viss person
 			app.MapGet("/personmovies/{personId}", (int personId, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
@@ -67,35 +73,39 @@ namespace filmsystemet
 				GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
 				var movies = favGenRepo.GetByCondition(m => m.PersonId == personId & m.Movies != null).ToList();
 
+				return movies;
+			}).WithName("GetPersonMovie");
+
+			// GET hämta "rating" på filmer kopplat till en person
+			app.MapGet("/movierating/{personId}", (int personId, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+				var personRating = favGenRepo.GetByCondition(r => r.PersonId == personId & r.Rating != null).ToList();
+
 
 				//var studentToStandard = studentRep.GetAll().Join(standardRep.GetAll(),
 				//		student => student.StandardRefId,
 				//		standard => standard.StandardId,
 				//		(stud, stand) => new { Student = stud, Standard = stand }).ToList();
 
-				return movies;
-			}).WithName("GetPersonMovie");
+				return personRating;
+			}).WithName("GetRating");
 
-			app.MapPost("/")
 
-			var summaries = new[]
+			// PUT Lägg till "rating" på filmer kopplat till en person
+			app.MapPut("/movierating/{personId}", (int personId, HttpContext httpContext) =>
 			{
-			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-		};
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+				
+				var addRating = favGenRepo.Update(personId).ToList();
 
-			app.MapGet("/weatherforecast1", (HttpContext httpContext) =>
-			{
-				var forecast = Enumerable.Range(1, 5).Select(index =>
-					new WeatherForecast
-					{
-						Date = DateTime.Now.AddDays(index),
-						TemperatureC = Random.Shared.Next(-20, 55),
-						Summary = summaries[Random.Shared.Next(summaries.Length)]
-					})
-					.ToArray();
-				return forecast;
-			})
-			.WithName("GetWeatherForecast1");
+				favGenRepo.Update(rating);
+				movieSystemDbContext.SaveChanges();
+
+				return rating;
+			}).WithName("AddRating");
 
 			app.Run();
 		}

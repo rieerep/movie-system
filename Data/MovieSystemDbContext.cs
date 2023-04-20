@@ -30,7 +30,7 @@ namespace filmsystemet.Data
                 // Laptop (Saturn)
                 // optionsBuilder.UseSqlServer("Data Source=Saturn;Initial Catalog=MovieSystemDb;Integrated Security=True;");
                 // DESKTOP (Jupiter)
-                 optionsBuilder.UseSqlServer("Data Source=Jupiter;Initial Catalog=MovieSystemDb;Integrated Security=True;");
+                 optionsBuilder.UseSqlServer("Data Source=Jupiter;Initial Catalog=miniapiDb;Integrated Security=True;");
             }
         }
 

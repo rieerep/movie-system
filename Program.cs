@@ -94,17 +94,17 @@ namespace filmsystemet
 
 
 			// PUT Lägg till "rating" på filmer kopplat till en person
-			app.MapPut("/movierating/{personId}", (int personId, HttpContext httpContext) =>
+			app.MapPost("/setrating/{Id}/{rating}", (int personId, FavouriteGenre addRating, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
 				
-				var addRating = favGenRepo.Update(personId).ToList();
+				// var addRating = favGenRepo.Update(addRating).ToList();
 
-				favGenRepo.Update(rating);
+				favGenRepo.Update(addRating);
 				movieSystemDbContext.SaveChanges();
 
-				return rating;
+				return addRating;
 			}).WithName("AddRating");
 
 			app.Run();

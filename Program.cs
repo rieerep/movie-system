@@ -107,6 +107,21 @@ namespace filmsystemet
 				return addRating;
 			}).WithName("AddRating");
 
+			// POST Koppla en person till en ny genre
+
+			app.MapPost("/addgenre/{personId}/{genre}", (int personId, FavouriteGenre addGenre, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+
+				favGenRepo.Create(addGenre);
+				movieSystemDbContext.SaveChanges();
+				return addGenre;
+			}).WithName("AddGenre");
+
+
+
+
 			app.Run();
 		}
 	}

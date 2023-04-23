@@ -15,3 +15,7 @@ This product uses the TMDb API but is not endorsed or certified by TMDb (https:/
  - /persongenres/{personId} - GET Gets all favourite genres connected to a certain user (example persongenres/3)
  - /personmovies/{personId} - GET Gets all movies connected to a certain user (example personmovies/1)
  - movierating/{personId}  - GET Gets all ratings on movies made by certain user (example movierating/1)
+ - /addgenre/{personId}/{genre} - POST Connect a user to a new genre
+ - /addlink/{personId}/{genre} - POST Connect a user to a new movie
+ - /addmovietogenre/{genre}/{movie}  - POST Connect a new movie to a new Genre.
+

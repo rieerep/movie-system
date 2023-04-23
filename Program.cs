@@ -101,7 +101,7 @@ namespace filmsystemet
 				
 				// var addRating = favGenRepo.Update(addRating).ToList();
 
-				favGenRepo.Create(addRating);
+				favGenRepo.Update(addRating);
 				movieSystemDbContext.SaveChanges();
 
 				return addRating;
@@ -131,19 +131,30 @@ namespace filmsystemet
 				return addGenre;
 			}).WithName("AddLink");
 
-			// GET Få förslag på filmer i en viss genre från ett externt API
-			//app.MapGet("/moviesuggestion/{personId}/genre", (int personId, HttpContext httpContext) =>
-			//{
-			//	MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
-			//	FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
-			//	var tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key={API-key}=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genre{genreId}";
+			// POST Lägg in nya länkar för en specifik genre
+            app.MapPost("/addmovietogenre/{genre}/{movie}", (FavouriteGenre addmovietogenre, HttpContext httpContext) =>
+            {
+                MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+                FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
 
-			//	return personRating;
-			//}).WithName("GetRating");
+                favGenRepo.Create(addmovietogenre);
+                movieSystemDbContext.SaveChanges();
+                return addmovietogenre;
+            }).WithName("AddMovie");
+
+            // GET Få förslag på filmer i en viss genre från ett externt API
+            //app.MapGet("/moviesuggestion/{personId}/genre", (int personId, int tmdb_id, HttpContext httpContext) =>
+            //{
+            //	MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+            //	FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+            //	var tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key={API-key}=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genre{genreId}";
+
+            //	return personRating;
+            //}).WithName("GetRecommended");
 
 
 
-			app.Run();
+            app.Run();
 		}
 	}
 }

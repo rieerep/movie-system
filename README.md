@@ -10,3 +10,8 @@ This product uses the TMDb API but is not endorsed or certified by TMDb (https:/
 
  - C#
  - SQL
+## API Calls
+ - /persons - GET Hämta alla personer i systemet - Gets all users in the system
+ - /persongenres/{personId} - GET Gets all favourite genres connected to a certain user (example persongenres/3)
+ - /personmovies/{personId} - GET Gets all movies connected to a certain user (example personmovies/1)
+ - movierating/{personId}  - GET Gets all ratings on movies made by certain user (example movierating/1)

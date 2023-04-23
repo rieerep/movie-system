@@ -101,7 +101,7 @@ namespace filmsystemet
 				
 				// var addRating = favGenRepo.Update(addRating).ToList();
 
-				favGenRepo.Update(addRating);
+				favGenRepo.Create(addRating);
 				movieSystemDbContext.SaveChanges();
 
 				return addRating;
@@ -119,6 +119,27 @@ namespace filmsystemet
 				return addGenre;
 			}).WithName("AddGenre");
 
+			// POST Lägg in nya länkar för en specifik person
+
+			app.MapPost("/addlink/{personId}/{genre}", (int personId, FavouriteGenre addGenre, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+
+				favGenRepo.Create(addGenre);
+				movieSystemDbContext.SaveChanges();
+				return addGenre;
+			}).WithName("AddLink");
+
+			// GET Få förslag på filmer i en viss genre från ett externt API
+			//app.MapGet("/moviesuggestion/{personId}/genre", (int personId, HttpContext httpContext) =>
+			//{
+			//	MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+			//	FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+			//	var tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key={API-key}=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genre{genreId}";
+
+			//	return personRating;
+			//}).WithName("GetRating");
 
 
 

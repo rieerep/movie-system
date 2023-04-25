@@ -142,19 +142,19 @@ namespace filmsystemet
                 return addmovietogenre;
             }).WithName("AddMovie");
 
-            // GET Få förslag på filmer i en viss genre från ett externt API
-            //app.MapGet("/moviesuggestion/{personId}/genre", (int personId, int tmdb_id, HttpContext httpContext) =>
-            //{
-            //	MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
-            //	FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
-            //	var tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key={API-key}=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genre{genreId}";
+			// GET Få förslag på filmer i en viss genre från ett externt API
+			app.MapGet("/moviesuggestion/{tmdb_id}", (int tmdb_id, HttpContext httpContext) =>
+			{
+				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
+				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
+                GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
+                var tmdbUrl = $"https://api.themoviedb.org/3/discover/movie?api_key=cb362116c7c70793fce05c7369dc033c&with_genres={tmdb_id}";
+				
 
-            //	return personRating;
-            //}).WithName("GetRecommended");
+				return tmdbUrl;
+			}).WithName("GetRecommended");
 
-
-
-            app.Run();
+			app.Run();
 		}
 	}
 }

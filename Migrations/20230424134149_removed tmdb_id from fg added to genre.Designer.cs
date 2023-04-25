@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using filmsystemet.Data;
 
@@ -11,9 +12,10 @@ using filmsystemet.Data;
 namespace filmsystemet.Migrations
 {
     [DbContext(typeof(MovieSystemDbContext))]
-    partial class MovieSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230424134149_removed tmdb_id from fg added to genre")]
+    partial class removedtmdb_idfromfgaddedtogenre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

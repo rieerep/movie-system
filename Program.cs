@@ -94,7 +94,7 @@ namespace filmsystemet
 
 
 			// PUT Lägg till "rating" på filmer kopplat till en person
-			app.MapPost("/setrating/{Id}/{rating}", (int personId, FavouriteGenre addRating, HttpContext httpContext) =>
+			app.MapPost("/setrating/{personId}/{rating}", (int personId, FavouriteGenre addRating, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
@@ -143,15 +143,19 @@ namespace filmsystemet
             }).WithName("AddMovie");
 
 			// GET Få förslag på filmer i en viss genre från ett externt API
-			app.MapGet("/moviesuggestion/{tmdb_id}", (int tmdb_id, HttpContext httpContext) =>
+			app.MapGet("/moviesuggestion/{tmdb_id}", async (int tmdb_id, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
                 GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
                 var tmdbUrl = $"https://api.themoviedb.org/3/discover/movie?api_key=cb362116c7c70793fce05c7369dc033c&with_genres={tmdb_id}";
-				
 
-				return tmdbUrl;
+                HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync(tmdbUrl);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                return responseBody;
 			}).WithName("GetRecommended");
 
 			app.Run();

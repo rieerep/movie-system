@@ -18,8 +18,10 @@ namespace filmsystemet
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 			var app = builder.Build();
+			app.UseCors();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
@@ -49,7 +51,7 @@ namespace filmsystemet
 				PersonRepository personRepo = new PersonRepository (movieSystemDbContext);
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
 				GenreRepository genreRepo = new GenreRepository(movieSystemDbContext);
-				var genres = favGenRepo.GetByCondition(fg => fg.PersonId == personId & fg.Movies == null).Join(genreRepo.GetAll(),
+				var genres = favGenRepo.GetByCondition(fg => fg.PersonId == personId).Join(genreRepo.GetAll(),
 					favGen => favGen.GenreId,
 					genre => genre.Id,
 					(favG, gen) => new { Genre = gen }).ToList();

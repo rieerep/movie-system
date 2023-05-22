@@ -19,6 +19,11 @@ namespace filmsystemet
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
+			builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+			{
+				builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+			}));
+
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
@@ -26,6 +31,7 @@ namespace filmsystemet
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
+				app.UseCors("corsapp");
 			}
 
 			// app.UseHttpsRedirection();
@@ -40,6 +46,15 @@ namespace filmsystemet
 
 				return personRepo.GetAll();
 			}).WithName("GetPersons");
+
+
+			// Get genres
+			app.MapGet("/genres", (HttpContext httpContext) =>
+			{
+				GenreRepository genreRepo = new GenreRepository(new MovieSystemDbContext());
+
+				return genreRepo.GetAll();
+			}).WithName("GetGenres");
 
 
 			// GET Hämtar genrer kopplade till person i systemet
@@ -93,8 +108,8 @@ namespace filmsystemet
 			}).WithName("GetRating");
 
 
-			// PUT Lägg till "rating" på filmer kopplat till en person
-			app.MapPost("/setrating/{Id}/{rating}", (int personId, FavouriteGenre addRating, HttpContext httpContext) =>
+			// POST Lägg till "rating" på filmer kopplat till en person
+			app.MapPost("/setrating", (/*int personId*/ FavouriteGenre addRating, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
@@ -108,8 +123,7 @@ namespace filmsystemet
 			}).WithName("AddRating");
 
 			// POST Koppla en person till en ny genre
-
-			app.MapPost("/addgenre/{personId}/{genre}", (int personId, FavouriteGenre addGenre, HttpContext httpContext) =>
+			app.MapPost("/addgenre", (FavouriteGenre addGenre, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
@@ -119,9 +133,8 @@ namespace filmsystemet
 				return addGenre;
 			}).WithName("AddGenre");
 
-			// POST Lägg in nya länkar för en specifik person
-
-			app.MapPost("/addlink/{personId}/{genre}", (int personId, FavouriteGenre addGenre, HttpContext httpContext) =>
+			// POST Lägg in nya länkar/film för en specifik person
+			app.MapPost("/addlink", (FavouriteGenre addGenre, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);

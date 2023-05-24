@@ -13,6 +13,7 @@ namespace filmsystemet.Models
         public int Id { get; set; }
         public string GenreName { get; set; }
         public string Description { get; set; }
+        public int TmdbId { get; set; }
 
         public virtual ICollection<FavouriteGenre> FavouriteGenres { get; set; }
     }

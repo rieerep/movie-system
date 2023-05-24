@@ -109,7 +109,7 @@ namespace filmsystemet
 
 
 			// PUT Lägg till "rating" på filmer kopplat till en person
-			app.MapPost("/setrating/{Id}/{rating}", (int personId, FavouriteGenre addRating, HttpContext httpContext) =>
+			app.MapPost("/setrating", (FavouriteGenre addRating, HttpContext httpContext) =>
 			{
 				MovieSystemDbContext movieSystemDbContext = new MovieSystemDbContext();
 				FavouriteGenreRepository favGenRepo = new FavouriteGenreRepository(movieSystemDbContext);
